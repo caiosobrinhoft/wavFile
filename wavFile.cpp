@@ -79,10 +79,9 @@ int main(){
     short int data[header.subchunk2_size];
     short int invertedData[header.subchunk2_size];
 
-    while(!feof(wavFile)){
-        fread(data, 1, header.subchunk2_size, wavFile); //(vetor, quantos bytes le por iteracao, quantos bytes maximo, arquivo)
-        fwrite(data, 1, header.subchunk2_size, wav);
-    }
+    fread(data, 1, header.subchunk2_size, wavFile); //(vetor, quantos bytes le por iteracao, quantos bytes maximo, arquivo)
+    fwrite(data, 1, header.subchunk2_size, wav);
+
     int i = 0;
     int j = 1;
     while (i < header.subchunk2_size && j < header.subchunk2_size)
@@ -93,8 +92,6 @@ int main(){
         j+=2;
     }
     fwrite(invertedData, 1, header.subchunk2_size, invert);
-    
-    
     
     return(0);
 }
