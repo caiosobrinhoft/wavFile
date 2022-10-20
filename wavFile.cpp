@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 //Caio Sobrinho da Silva
 //RA: 211044156
@@ -55,6 +56,7 @@ int main(){
     fwrite(&header, 1, sizeof(header), invert);
     cout << "\nFile type: "<< header.riff[0]<<header.riff[1]<<header.riff[2]<<header.riff[3];
     cout << "\nFile size, without the header: "<<getFileSize(wavFile)-(sizeof(header.riff) + sizeof(header.chunk_size));
+    fseek(wavFile, sizeof(header), SEEK_SET);
     cout << "\nSubtype: "<< header.format[0]<<header.format[1]<<header.format[2]<<header.format[3];
     cout << "\nIdentifier: " << header.subchunk1_id[0]<<header.subchunk1_id[1]<<header.subchunk1_id[2]<<header.subchunk1_id[3];
     cout << "\nChunk Size: "<< header.subchunk1_size;
@@ -63,6 +65,8 @@ int main(){
     if(header.num_channels == 1){
         cout <<", Mono";
     }
+    else
+        cout <<", Stereo";
     cout << "\nSample rate: " << header.sample_rate;
     header.byte_rate = (header.sample_rate)*(header.num_channels)*(header.bits_per_sample/8);
     cout << "\nByte rate: " << header.byte_rate;
@@ -73,17 +77,24 @@ int main(){
     cout <<"\nData size: " <<header.subchunk2_size << endl;
     int nBytes;
     short int data[header.subchunk2_size];
-    short int aux[header.subchunk2_size];
-    while(!feof(wavFile)){
-        nBytes = fread(data, 1, header.subchunk2_size, wavFile); //(vetor, quantos bytes le por iteracao, quantos bytes maximo, arquivo)
-        fwrite(data, 1, nBytes, wav);
+    short int invertedData[header.subchunk2_size];
 
+    while(!feof(wavFile)){
+        fread(data, 1, header.subchunk2_size, wavFile); //(vetor, quantos bytes le por iteracao, quantos bytes maximo, arquivo)
+        fwrite(data, 1, header.subchunk2_size, wav);
     }
-    for (int i = 0; i < header.subchunk2_size; i++)
+    int i = 0;
+    int j = 1;
+    while (i < header.subchunk2_size && j < header.subchunk2_size)
     {
-        aux[i] = data[header.subchunk2_size-i];
+        invertedData[i] = data[j];
+        invertedData[j] = data[i];
+        i+=2;
+        j+=2;
     }
-    fwrite(aux, 1, header.subchunk2_size, invert);
+    fwrite(invertedData, 1, header.subchunk2_size, invert);
+    
+    
     
     return(0);
 }
