@@ -75,7 +75,6 @@ int main(){
     cout << "\nBits per sample: " << (header.bits_per_sample) << " bits";
     cout << "\nSubchunk id: " <<header.subchunk2_id[0]<<header.subchunk2_id[1]<<header.subchunk2_id[2]<<header.subchunk2_id[3];
     cout <<"\nData size: " <<header.subchunk2_size << endl;
-    int nBytes;
     short int data[header.subchunk2_size];
     short int invertedData[header.subchunk2_size];
 
