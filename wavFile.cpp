@@ -7,6 +7,7 @@
 //RA: 211044156
 using namespace std;
 
+//Struct used for header
 typedef struct header_file{
     char riff[4];
     int chunk_size; 
@@ -23,6 +24,7 @@ typedef struct header_file{
     int subchunk2_size;
 }header;
 
+//Get the size of file
 int getFileSize(FILE *arq){
     int fileSize = 0;
     fseek(arq, 0, SEEK_END);
@@ -36,15 +38,14 @@ int main(){
     /*header wavHeader;
     riff_chunk riffChunk;*/
     FILE *wavFile;
-    FILE *wav;
+    FILE *wavCopia;
     FILE *invert;
 
-    int lenght = 0;
-    int bytesRead;
-    unsigned long numSamples;
     header header;
+
+    //Opening the archives for reading and writing
     wavFile = fopen("applause.wav", "rb");
-    wav = fopen("copia.wav", "wb");
+    wavCopia = fopen("copia.wav", "wb");
     invert = fopen("invert.wav", "wb");
 
     if(wavFile == NULL){
@@ -52,7 +53,7 @@ int main(){
     }
     
     fread(&header,1, sizeof(header), wavFile);
-    fwrite(&header, 1, sizeof(header), wav);
+    fwrite(&header, 1, sizeof(header), wavCopia);
     fwrite(&header, 1, sizeof(header), invert);
     cout << "\nFile type: "<< header.riff[0]<<header.riff[1]<<header.riff[2]<<header.riff[3];
     cout << "\nFile size, without the header: "<<getFileSize(wavFile)-(sizeof(header.riff) + sizeof(header.chunk_size));
@@ -79,7 +80,7 @@ int main(){
     short int invertedData[header.subchunk2_size];
 
     fread(data, 1, header.subchunk2_size, wavFile); //(vetor, quantos bytes le por iteracao, quantos bytes maximo, arquivo)
-    fwrite(data, 1, header.subchunk2_size, wav);
+    fwrite(data, 1, header.subchunk2_size, wavCopia);
 
     int i = 0;
     int j = 1;
