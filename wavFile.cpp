@@ -35,8 +35,6 @@ int getFileSize(FILE *arq){
 }
 
 int main(){
-    /*header wavHeader;
-    riff_chunk riffChunk;*/
     FILE *wavFile;
     FILE *wavCopia;
     FILE *invert;
